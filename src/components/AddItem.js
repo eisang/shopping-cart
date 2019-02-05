@@ -1,20 +1,40 @@
 import React, { Component } from "react";
+import SelectedOptions from "./SelectedOptions";
 
-class AddItems extends Component {
+class AddItem extends Component {
   state = {
-    quantity: ""
+    quantity: 1,
+    selectedItem: this.props.products
   };
 
-  handleChange = e => {
-    const { name, value } = e.target;
+  handleQuantityChange = e => {
     this.setState({
-      [name]: value
+      quantity: parseInt(e.target.value)
     });
   };
 
-  handleSumbit = e => {
+  handleSelection = e => {
+    console.log(e.target.value);
+    this.setState({
+      selectedItem: e.target.value
+    });
+  };
+
+  // handleChange = e => {
+  //   const { name, value } = e.target;
+  //   this.setState({
+  //     [name]: value
+  //   });
+  // };
+
+  handleSubmit = e => {
     e.preventDefault();
-    this.props.addItem(this.state);
+    const newProducts = {
+      id: this.state.selectedItem,
+      quantity: this.state.quantity
+    };
+    this.props.addItem(newProducts);
+    //  this.props.addItem(this.handleQuantityChange, this.handleSelection);
   };
 
   render() {
@@ -23,48 +43,39 @@ class AddItems extends Component {
       marginLeft: "190px",
       marginTop: "170px",
       paddingLeft: "170px",
-      //   margin: "auto",
       display: "block"
     };
+
+    const selections =
+      this.props.product.length > 0
+        ? this.props.product.map(product => {
+            return <SelectedOptions key={product.id} product={product} />;
+          })
+        : null;
 
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
+          <label style={{ paddingLeft: "10px" }}>Quantity</label>
+
           <input
             className="my-5 mx-5"
-            type="text"
+            type="number"
             name="quantity"
-            onChange={this.handleChange}
+            onChange={this.handleQuantityChange}
+            // onChange={this.handleChange}
             value={this.state.quantity}
           />
-
+          {/* <label>products</label> */}
           <select
             className="my-5 mx-5"
             style={style}
-            value={this.state.name}
-            name="name"
-            onChange={this.handleChange}
+            value={this.state.selectedItem}
+            name="selectedItem"
+            onChange={this.handleSelection}
+            // onChange={this.handleChange}
           >
-            <option value="">-- Please Choose --</option>
-            <option value="Mediocre Iron Watch">Medicore Iron Watch</option>
-            <option value="Heavy Duty Concrete Plate">
-              "Heavy Duty Concrete Plate"
-            </option>
-            <option value="Intelligent Paper Knife">
-              Intelligent Paper Knife"
-            </option>
-            <option value="Small Aluminum Keyboard">
-              Small Aluminum Keyboard
-            </option>
-            <option value="Practical Copper Plate">
-              Practical Copper Plate
-            </option>
-            <option value="Awesome Bronze Pants">Awesome Bronze Pants</option>
-            <option value="Intelligent Leather Clock">
-              Intelligent Leather Clock
-            </option>
-            <option value="Ergonomic Bronze Lamp">Ergonomic Bronze Lamp</option>
-            <option value="Awesome Leather Shoes">Awesome Leather Shoes</option>
+            {selections}
           </select>
 
           <button className="ml-5 mt-5 pr-5 text-justify">Submit</button>
@@ -73,4 +84,4 @@ class AddItems extends Component {
     );
   }
 }
-export default AddItems;
+export default AddItem;

@@ -49,19 +49,40 @@ class App extends Component {
     ]
   };
 
-  addItem = items => {
-    let cartItemsList = [...this.state.cartItemsList, items];
-    this.setState({
-      cartItemsList: items
+  addItem = newProduct => {
+    const { id, quantity } = newProduct;
+    const product = this.state.product.find(product => product.id == id);
+    this.setState(prevState => {
+      console.log(newProduct);
+      return {
+        cartItemsList: [
+          ...prevState.cartItemsList,
+          {
+            id: 4,
+            quantity,
+            product
+          }
+        ]
+      };
     });
   };
 
   render() {
+    const total =
+      this.state.cartItemsList.reduce((acc, product) => {
+        return acc + product.quantity * product.product.priceInCents;
+      }, 0) / 100;
+
     return (
       <div>
         <CartHeader name="here" />
-        <CartItems cartItemsList={this.state.cartItemsList} />
-        <AddItems addItem={this.addItem} />
+        <CartItems
+          cartItemsList={this.state.cartItemsList}
+          product={this.state.product}
+        />
+        <div>Total Price: ${total}</div>
+
+        <AddItems addItem={this.addItem} product={this.state.product} />
         <CartFooter copyright="2016" />
       </div>
     );
@@ -69,5 +90,3 @@ class App extends Component {
 }
 
 export default App;
-
-/* <AddItems addItem={this.addItem} /> */
